@@ -1,9 +1,9 @@
 <?php
 
 /* 
- * Plugin Name: Graphic Manager Genero INE
+ * Plugin Name: Graphic Manager Charts
  * Plugin URI:https://developer.wordpress.org/plugins/the-basics/
- * Description: Manegador de graficas (Big Data Ine Genero)
+ * Description: Manegador de graficas (Big Data Genero)
  * Version:1.0
  * Author:Martin Eleno Perez
  * Author URI:https://developer.wordpress.org/
@@ -27,5 +27,15 @@
  */
 if ( is_admin() ) {
     // we are in admin mode
-    require_once( dirname( __FILE__ ) . '/admin/plugin-name-admin.php' );
+    /**
+     * Esta etiqueta condicional comprueba si el panel de control o el panel de 
+     * administración está intentando mostrarse. Es una función booleana que 
+     * devolverá true si la URL que se accede está en la sección admin o 
+     * false para una página front-end.
+     * Esta función no comprueba si el usuario actual tiene permiso para ver el 
+     * Panel de control o el panel de administración. En su lugar, use current_user_can ().
+     */
+}
+else {
+    require_once( dirname( __FILE__ ) . '/public/shortcodes-to-chart.php' );
 }
