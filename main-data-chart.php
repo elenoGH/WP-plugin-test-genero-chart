@@ -25,3 +25,7 @@
     along with {Plugin Name}. If not, see {URI to Plugin License}.
 
  */
+if ( is_admin() ) {
+    // we are in admin mode
+    require_once( dirname( __FILE__ ) . '/admin/plugin-name-admin.php' );
+}
