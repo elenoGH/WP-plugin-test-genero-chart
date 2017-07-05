@@ -54,7 +54,7 @@ function dwwp_sc_mcp_legislativo($atts, $content = NULL)
      * la liberamos
     */
     ob_start();
-    require plugin_dir_path(dirname( __FILE__ )).'public/views/view-chart-mcpl.php';
+    require plugin_dir_path(dirname( __FILE__ )).'public/application/views/view-chart-mcpl.php';
     
     
     //Regresar el contenido
