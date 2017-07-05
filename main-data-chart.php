@@ -1,7 +1,7 @@
 <?php
 
 /* 
- * Plugin Name: Graphic Manager
+ * Plugin Name: Graphic Manager Genero INE
  * Plugin URI:https://developer.wordpress.org/plugins/the-basics/
  * Description: Manegador de graficas (Big Data Ine Genero)
  * Version:1.0
