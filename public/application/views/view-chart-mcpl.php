@@ -1,5 +1,5 @@
-<section>
-    Aqui van nuestras Graficas
+<section class="aquiMiEstilo">
+    <h1>Aqui van nuestras Graficas</h1>
 <?php 
     foreach ($obj_json as $key => $item) {
         

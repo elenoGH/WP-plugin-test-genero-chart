@@ -63,3 +63,15 @@ function dwwp_sc_mcp_legislativo($atts, $content = NULL)
 }
 
 add_shortcode('sc-mcp-legislativo', 'dwwp_sc_mcp_legislativo');
+
+/**
+ * script que utilizaran mis vistas de graficas
+ */
+function assets_script(){
+//    wp_enqueue_style( 'graficas-css', get_template_directory_uri().'public/assets/css/css-general-admin.css', '1.0');
+//    wp_enqueue_script('graficas-js', get_stylesheet_directory_uri().'public/assets/js/js-general-admin.js', array('jquery'), '1.0');
+    
+    wp_enqueue_style( 'graficas-css', plugin_dir_url( __FILE__ ).'assets/css/css-general-admin.css', '1.0');
+    wp_enqueue_script('graficas-js', plugin_dir_url( __FILE__ ).'assets/js/js-general-admin.js', array('jquery'), '1.0');
+}
+add_action('wp_enqueue_scripts', 'assets_script');
