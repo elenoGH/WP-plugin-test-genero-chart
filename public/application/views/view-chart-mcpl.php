@@ -1,5 +1,7 @@
 <section class="aquiMiEstilo">
     <h1>Aqui van nuestras Graficas</h1>
+    <canvas id="canvas"></canvas>
+    
 <?php 
     foreach ($obj_json as $key => $item) {
         
