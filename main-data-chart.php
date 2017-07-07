@@ -35,7 +35,35 @@ if ( is_admin() ) {
      * Esta función no comprueba si el usuario actual tiene permiso para ver el 
      * Panel de control o el panel de administración. En su lugar, use current_user_can ().
      */
+//    require_once( dirname( __FILE__ ) . '/public/shortcodes-to-chart.php' );
 }
-else {
-    require_once( dirname( __FILE__ ) . '/public/shortcodes-to-chart.php' );
-}
+
+
+//add_action( 'wp_loaded', function ()
+//{
+//    if ( !is_admin() ) { // Only target the front end
+//        // Do what you need to do
+//        require_once( dirname( __FILE__ ) . '/public/shortcodes-to-chart.php' );
+//    }
+//});
+
+
+///**
+// * Activacion de un hook
+// * En la activación, los complementos pueden ejecutar una rutina para agregar 
+// * reglas de reescritura, agregar tablas de base de datos personalizadas o 
+// * establecer valores de opción predeterminados.
+// */
+//
+//register_activation_hook( __FILE__, 'plugin_f_a_tets_eleno_activation' );
+//
+///**
+// * Desactivar Hook
+// * Al desactivar, los complementos pueden ejecutar una rutina para eliminar 
+// * datos temporales, como caché y archivos temporales y directorios.
+// */
+//
+//register_deactivation_hook( __FILE__, 'plugin_f_a_tets_eleno_deactivation' );
+
+
+require_once( dirname( __FILE__ ) . '/public/shortcodes-to-chart.php' );
