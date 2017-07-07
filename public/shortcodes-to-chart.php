@@ -22,27 +22,7 @@ function dwwp_sc_mcp_legislativo($atts, $content = NULL)
 //    $atts = shortcode_atts($pairs, $atts);
 //    
 //    return '<h1>'.$atts['title'].'</h1>';
-    
-    // obtenemos JSON temporal de datos a mostrar en la grafica
-    // verificar como integrar codigo coneccion a la BD llamado a una 
-    // tabla espesifica
-    $url = 'http://datosgenero.aurealabs.org/json_grafica_test.php';
-    
-    /**
-     * Recupere la respuesta bruta de una solicitud HTTP 
-     * segura utilizando el método GET.
-     */
-    $response = wp_safe_remote_get($url);
-    
-    /**
-     * Recupera el cuerpo de una solicitud HTTP ya recuperada.
-     */
-    $body = wp_remote_retrieve_body($response);
-    
-    $obj_json = json_decode($body);
-    
-    //var_dump($obj_json);
-    
+        
     // Incluir nuestro HTML
     /**
      * Frente a la aplicación de WordPress. Este archivo no hace nada, pero cargas
@@ -67,7 +47,8 @@ add_shortcode('sc-mcp-legislativo', 'dwwp_sc_mcp_legislativo');
 /**
  * script que utilizaran mis vistas de graficas
  */
-function assets_script(){
+function assets_script()
+{
     
     wp_enqueue_style( 'graficas-css', plugin_dir_url( __FILE__ ).'assets/css/css-general-admin.css', '1.0');
     wp_enqueue_script('graficas-js', plugin_dir_url( __FILE__ ).'assets/js/js-general-admin.js', array('jquery'), '1.0');
@@ -90,27 +71,42 @@ add_action('wp_enqueue_scripts', 'assets_script');
 
 // if both logged in and not logged in users can send this AJAX request,
 // add both of these actions, otherwise add only the appropriate one
-add_action( 'wp_ajax_nopriv_custom_action', 'ajax_custom_action' );
-add_action( 'wp_ajax_custom_action', 'ajax_custom_action' );
+add_action( 'wp_ajax_nopriv_custom_action', 'get_data_custom_action' );
+add_action( 'wp_ajax_custom_action', 'get_data_custom_action' );
 
-
-function ajax_custom_action() {
- // get the submitted parameters
- $postID = $_POST['postID'];
- 
- // generate the response
- $response = json_encode(
-            array(
-                'success' => true
-                , 'postID' => $postID) 
-         );
- 
- // response output
- header( "Content-Type: application/json" );
- echo $response;
- 
- // IMPORTANT: don't forget to "exit"
- exit;
+/**
+ * funcion que recupera datos via ajax
+ */
+function get_data_custom_action()
+{
+    // get the submitted parameters
+    $nivel_gobierno_            = $_POST['nivel_gobierno_'];
+    $cargo_                     = $_POST['cargo_'];
+    $entidad_federativa_mcpl_   = $_POST['entidad_federativa_mcpl_'];
+    $partido_politico_          = $_POST['partido_politico_'];
+    $principio_rep_             = $_POST['principio_rep_'];
+    $prop_sup_                  = $_POST['prop_sup_'];
+    
+    // obtenemos JSON temporal de datos a mostrar en la grafica
+    // verificar como integrar codigo coneccion a la BD llamado a una 
+    // tabla espesifica
+    $url = 'http://datosgenero.aurealabs.org/json_grafica_test.php';
+    
+    /**
+     * Recupere la respuesta bruta de una solicitud HTTP 
+     * segura utilizando el método GET.
+     */
+    $response = wp_safe_remote_get($url);
+    
+    /**
+     * Recupera el cuerpo de una solicitud HTTP ya recuperada.
+     */
+    $objeto = wp_remote_retrieve_body($response);
+        
+    // response output
+    header( "Content-Type: application/json" );
+    echo $objeto;
+    die;
 }
 
 add_action('wp_ajax_custom_action', 'ajax_custom_action');
