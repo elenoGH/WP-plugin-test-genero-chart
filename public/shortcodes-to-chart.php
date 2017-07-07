@@ -78,8 +78,7 @@ function assets_script(){
      */
     wp_localize_script( 'graficas-js', 'object_urls',
             array(
-                 'get_data_mcpl' => plugin_dir_url( __FILE__ ).'application/controllers/get_data.php'
-                ,    'admin_url_ajax'   => admin_url( 'admin-ajax.php' )
+                    'admin_url_ajax'   => admin_url( 'admin-ajax.php' )
                 )
             );
     wp_enqueue_script('graficas-chart-bundle-js', plugin_dir_url( __FILE__ ).'assets/js/chartjs/Chart.bundle.js');
