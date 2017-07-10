@@ -116,5 +116,4 @@
             <b id='p_pro_sup'></b>.
         </h4>
     </div>
-    <button id="randomizeData">Randomize Data</button>
 </section>

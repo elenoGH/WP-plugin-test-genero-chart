@@ -24,32 +24,53 @@ function js_general_admin($)
 //        });
 //    }
 
-//    get_partidoPolitico('');
-//    function get_partidoPolitico(ent_fed)
-//    {
-//        $.post("modelo.php", {partido_politico_mcpl: {
-//                ent_fed_: ent_fed
-//            }}, function (data) {
-//            var array_obj = JSON.parse(data);
-//            var opt_sec = "<option value=''>--Todos</option>";
-//            $.each(array_obj, function (index, value) {
-//                opt_sec = opt_sec + "<option value='" + value.part_pol + "'>" + value.part_pol + ' ' + value.desc_pp + "</option>";
-//            });
-//            $('#partido-politico').html(opt_sec);
-//        });
-//    }
+    get_partidoPolitico('');
+    function get_partidoPolitico(ent_fed)
+    {
+        jQuery.post(
+            object_urls.admin_url_ajax,
+            {
+                action: 'get_pp_mcpl'
+                , ent_fed_: ent_fed
+            },
+            function (response) {
+                var array_obj = JSON.parse(response);
+                var opt_sec = "<option value=''>--Todos</option>";
+                $.each(array_obj, function (index, value) {
+                    opt_sec = opt_sec + "<option value='" + value.partido_politico + "'>" + value.partido_politico + ' ' + value.descripcion_pp + "</option>";
+                });
+                $('#partido-politico').html(opt_sec);
+            }
+        );
+    }
 
-//    get_principioRepresentacion();
-//    function get_principioRepresentacion() {
-//        $.post("modelo.php", {principio_representacion_mcpl: true}, function (data) {
-//            var array_obj = JSON.parse(data);
-//            var opt_sec = "<option value=''>--Todos</option>";
-//            $.each(array_obj, function (index, value) {
-//                opt_sec = opt_sec + "<option value='" + value.principio_representacion + "'>" + value.principio_representacion + "</option>";
-//            });
-//            $('#principio-rep').html(opt_sec);
-//        });
-//    }
+    get_principioRepresentacion();
+    function get_principioRepresentacion()
+    {
+        jQuery.post(
+            object_urls.admin_url_ajax,
+            {
+                action: 'get_pr_mcpl'
+            },
+            function (response) {
+                var array_obj = JSON.parse(response);
+                var opt_sec = "<option value=''>--Todos</option>";
+                $.each(array_obj, function (index, value) {
+                    opt_sec = opt_sec + "<option value='" + value.principio_representacion + "'>" + value.principio_representacion + "</option>";
+                });
+                $('#principio-rep').html(opt_sec);
+            }
+        );
+
+        $.post("modelo.php", {principio_representacion_mcpl: true}, function (data) {
+            var array_obj = JSON.parse(data);
+            var opt_sec = "<option value=''>--Todos</option>";
+            $.each(array_obj, function (index, value) {
+                opt_sec = opt_sec + "<option value='" + value.principio_representacion + "'>" + value.principio_representacion + "</option>";
+            });
+            $('#principio-rep').html(opt_sec);
+        });
+    }
 
     $("#nivel-gobierno").change(function () {
         $("#p_nivel_gob").text($(this).val() == '' ? 'Todos' : $(this).val());
@@ -117,7 +138,8 @@ function js_general_admin($)
                 , prop_sup_: prop_sup
             },
             function (response) {
-                console.log(response);
+                
+                console.log(JSON.parse(response));
                 if (lienso != undefined || lienso != null) {
                     lienso.destroy();
                 }
@@ -126,10 +148,10 @@ function js_general_admin($)
                 var array_data_hombres = [];
                 var array_data_mujeres = [];
                 
-                $.each(response, function (index, value) {
+                $.each(JSON.parse(response), function (index, value) {
                     array_label_x.push(value.anio_ini + '-' + value.anio_fin);
-                    array_data_hombres.push(parseInt(value.totales_hombres_suma));
-                    array_data_mujeres.push(parseInt(value.totales_mujeres_suma));
+                    array_data_hombres.push(parseInt(value.hombre_suma));
+                    array_data_mujeres.push(parseInt(value.mujer_suma));
                 });
                 /*****/
                 var barChartData = {
