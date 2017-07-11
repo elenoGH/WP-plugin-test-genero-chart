@@ -98,9 +98,35 @@ require_once( dirname(__FILE__) . '/public/shortcodes-to-chart.php' );
 
 class import_csv {
 
-    function main_body() {
+    private $error = '';
+    
+    function verificaCsv()
+    {
+        if(!empty($_FILES['csv_import']['tmp_name']))
+        {
+            $csv_rows=Array();
+            $csv="";
+            $handle = fopen($_FILES['csv_import']['tmp_name'], "r");
+            if (($handle = fopen($_FILES['csv_import']['tmp_name'], "r")) !== FALSE) {
+                echo ' Hola de nuevo';
+                fgetcsv($handle);
+                while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                     echo $row[0];
+                }
+                fclose($handle);
+            }
+            
+            return;
+        }else {
+            $this->error = "";
+            return;
+        }
+    }
+    function main_body() 
+    {
         $string = 'Agregar solo archivo CSV';
         echo $string;
+        $this->verificaCsv();
         ?>
         <div class="wrap">
             <h2>Import CSV Files</h2><br/>
@@ -109,7 +135,7 @@ class import_csv {
             <?php endif; ?>
             <form class="add:the-list: validate" method="post" enctype="multipart/form-data">
                 <input name="_csv_import_files_next" type="hidden" value="next" />
-                <label for="csv_import">Select a CSV file:</label><br/>
+                <label for="csv_import">Selecciona un archivo con formato CSV:</label><br/>
                 <input name="csv_import" id="csv_import" type="file" value=""/>
                 <!--div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
                     <h3 class="hndle" style="cursor:auto;padding:10px;">
