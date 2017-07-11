@@ -16,7 +16,7 @@
 function dwwp_sc_mcp_legislativo($atts, $content = NULL)
 {
     wp_enqueue_style( 'graficas-css', plugin_dir_url( __FILE__ ).'assets/css/css-general-admin.css', '1.0');
-    wp_enqueue_script('graficas-js', plugin_dir_url( __FILE__ ).'assets/js/js-general-admin.js', array('jquery'), '1.0');
+    wp_enqueue_script('graficas-js', plugin_dir_url( __FILE__ ).'assets/js/js-grafica-mcpl.js', array('jquery'), '1.0');
     /**
      * @dominio : plugin_dir_url( __FILE__ )
      * @ruta_absoluta : dirname( __FILE__ )
@@ -29,14 +29,6 @@ function dwwp_sc_mcp_legislativo($atts, $content = NULL)
             );
     wp_enqueue_script('graficas-chart-bundle-js', plugin_dir_url( __FILE__ ).'assets/js/chartjs/Chart.bundle.js');
     wp_enqueue_script('graficas-utils-js', plugin_dir_url( __FILE__ ).'assets/js/chartjs/utils.js');
-    
-//    $pairs = array(
-//            'title' =>  'Titulo por default'
-//        ,   'src'   =>  'www.google.com'
-//    );
-//    $atts = shortcode_atts($pairs, $atts);
-//    
-//    return '<h1>'.$atts['title'].'</h1>';
         
     // Incluir nuestro HTML
     /**

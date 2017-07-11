@@ -49,7 +49,7 @@ if (is_admin()) {
             . ", apellido varchar(33) DEFAULT NULL "
             . ", nombre varchar(29) DEFAULT NULL "
             . ", sexo varchar(6) DEFAULT NULL "
-            . ", partido_politico varchar(50) NOT NULL "
+            . ", partido_politico varchar(50) DEFAULT NULL "
             . ", principio_representacion varchar(27) DEFAULT NULL "
             . ", distrito_electoral varchar(10) DEFAULT NULL "
             . ", circunscripcion varchar(10) DEFAULT NULL "
@@ -104,18 +104,50 @@ class import_csv {
     {
         if(!empty($_FILES['csv_import']['tmp_name']))
         {
-            $csv_rows=Array();
-            $csv="";
+            $count = 0;
             $handle = fopen($_FILES['csv_import']['tmp_name'], "r");
             if (($handle = fopen($_FILES['csv_import']['tmp_name'], "r")) !== FALSE) {
-                echo ' Hola de nuevo';
                 fgetcsv($handle);
-                while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                     echo $row[0];
+                global $wpdb;
+                $nombreTabla = $wpdb->prefix . "mcp_legislativo";
+                if ($wpdb->get_var("SHOW TABLES LIKE '$nombreTabla'") == $nombreTabla) {
+                    while (($row = fgetcsv($handle, 100000, ",")) !== FALSE) {
+                        $wpdb->insert(
+                            $nombreTabla, 
+                            array(
+                                'sexo'                      => $row[2]
+                                ,'partido_politico'          => $row[3]
+                                ,'propietario_suplente'      => $row[7]
+                                ,'periodo'                   => $row[8]
+                                ,'anio_ini'                  => $row[9]
+                                ,'anio_fin'                  => $row[10]
+                                ,'poder'                     => $row[11]
+                                ,'nivel_gobierno'            => $row[12]
+                                ,'cargo'                     => $row[13]
+                                ,'descripcion_pp'            => $row[14]
+                                ,'entidad_federativa'        => $row[15]
+                            ), 
+                            array( 
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%d',
+                                '%d',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s'
+                            )
+                        );
+                        $wpdb->flush();
+                        $count++;
+                    }
+                    fclose($handle);
                 }
-                fclose($handle);
             }
-            
+            echo ' Se agregaron '.$count.' datos a la Base de Datos';
             return;
         }else {
             $this->error = "";
@@ -125,18 +157,48 @@ class import_csv {
     function main_body() 
     {
         $string = 'Agregar solo archivo CSV';
-        echo $string;
         $this->verificaCsv();
         ?>
         <div class="wrap">
-            <h2>Import CSV Files</h2><br/>
+            <h2><?php echo $string;?></h2><br/>
             <?php if ($this->error !== '') : ?>
                 <div class="error"><?php echo $this->error; ?></div>
             <?php endif; ?>
             <form class="add:the-list: validate" method="post" enctype="multipart/form-data">
-                <input name="_csv_import_files_next" type="hidden" value="next" />
-                <label for="csv_import">Selecciona un archivo con formato CSV:</label><br/>
-                <input name="csv_import" id="csv_import" type="file" value=""/>
+                <div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
+                    <h3 class="hndle" style="cursor:auto;padding:10px;">
+                        <span>
+                            Plantilla a Importar/Exportar
+                        </span>
+                    </h3>
+                    <div class="inside">
+                        <select name="field-delimiter">
+                            <option value="">-- Selecciona</option>
+                            <option value="mcpe">#MujeresEnCargosPúblicos EJECUTIVO</option>
+                            <option value="mcpl">#MujeresEnCargosPúblicos LEGISLATIVO</option>
+                        </select>
+                    </div>
+                    <div class="inside">
+                        <input type="button" class="button" name="button-download" value="Descargar" />
+                    </div>
+                </div>
+                <div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
+                    <h3 class="hndle" style="cursor:auto;padding:10px;">
+                        <span>
+                            Selecciona un archivo con formato CSV
+                        </span>
+                    </h3>
+                    <div class="inside">
+                        <div id="post-formats-select">
+                            <input name="csv_import" id="csv_import" type="file" value=""/>
+                        </div>
+                    </div>
+                    <div class="inside">
+                        <div id="post-formats-select">
+                            <input type="submit" class="button" name="submit" value="Agregar" />
+                        </div>
+                    </div>
+                </div>
                 <!--div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
                     <h3 class="hndle" style="cursor:auto;padding:10px;">
                         <span>Select Import Type</span>
@@ -153,24 +215,10 @@ class import_csv {
                             <br>
                         </div>
                     </div>
-                </div>
-                <div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
-                    <h3 class="hndle" style="cursor:auto;padding:10px;">
-                        <span>
-                            Select Field Delimiter
-                        </span>
-                    </h3>
-                    <div class="inside">
-                        <div id="post-formats-select">
-                            <select name="field-delimiter">
-                                <option value=",">comma  ( , )</option>
-                                <option value=";">semicolon  ( ; )</option>
-                                <option value="	">tab  ( &nbsp;&nbsp;&nbsp;&nbsp; )</option>
-                            </select>
-                        </div>
-                    </div>
                 </div-->
-                <input type="submit" class="button" name="submit" value="Agregar" />
+                <div style="width: 10px; height: 10px">
+                    <img src="<?php echo esc_url(plugins_url().'/data-chart/public/assets/images/loading.gif')?>" id="loading-animation">
+                </div>
             </form>
         </div>
         <?php
@@ -184,3 +232,54 @@ function get_action_class_import_csv() {
 }
 
 add_action('admin_menu', 'get_action_class_import_csv');
+
+
+function dwwp_admin_enqueue_scripts()
+{
+    global $pagenow, $typenow;
+    if ($pagenow == 'tools.php') {
+        //wp_enqueue_style('wp-admin-css', plugins_url('public/assets/css/css-general-admin.css', __FILE__));
+        wp_enqueue_style( 'wp-admin-css', plugin_dir_url( __FILE__ ).'public/assets/css/css-general-admin.css', '1.0');
+        wp_enqueue_script('wp-admin-js', plugin_dir_url( __FILE__ ).'public/assets/js/js-general-admin.js', array('jquery'), '1.0');
+    }
+}
+add_action('admin_enqueue_scripts', 'dwwp_admin_enqueue_scripts');
+
+
+
+//                            array(
+//                                'apellido'                  => $row[0]
+//                                ,'nombre'                    => $row[1]
+//                                ,'sexo'                      => $row[2]
+//                                ,'partido_politico'          => $row[3]
+//                                ,'principio_representacion'  => $row[4]
+//                                ,'distrito_electoral'        => $row[5]
+//                                ,'circunscripcion'           => $row[6]
+//                                ,'propietario_suplente'      => $row[7]
+//                                ,'periodo'                   => $row[8]
+//                                ,'anio_ini'                  => $row[9]
+//                                ,'anio_fin'                  => $row[10]
+//                                ,'poder'                     => $row[11]
+//                                ,'nivel_gobierno'            => $row[12]
+//                                ,'cargo'                     => $row[13]
+//                                ,'descripcion_pp'            => $row[14]
+//                                ,'entidad_federativa'        => $row[15]
+//                            ), 
+//                            array( 
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%d',
+//                                '%d',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s',
+//                                '%s'
+//                            )
