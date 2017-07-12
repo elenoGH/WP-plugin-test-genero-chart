@@ -46,22 +46,22 @@ if (is_admin()) {
     } else {
         $sql = "CREATE TABLE ".$nombreTabla." ( "
             . " id int(11) NOT NULL AUTO_INCREMENT "
-            . ", apellido varchar(33) DEFAULT NULL "
-            . ", nombre varchar(29) DEFAULT NULL "
-            . ", sexo varchar(6) DEFAULT NULL "
+            . ", apellido varchar(50) DEFAULT NULL "
+            . ", nombre varchar(50) DEFAULT NULL "
+            . ", sexo varchar(8) DEFAULT NULL "
             . ", partido_politico varchar(50) DEFAULT NULL "
-            . ", principio_representacion varchar(27) DEFAULT NULL "
-            . ", distrito_electoral varchar(10) DEFAULT NULL "
-            . ", circunscripcion varchar(10) DEFAULT NULL "
-            . ", propietario_suplente varchar(11) DEFAULT NULL "
-            . ", periodo varchar(100) DEFAULT NULL "
+            . ", principio_representacion varchar(50) DEFAULT NULL "
+            . ", distrito_electoral varchar(50) DEFAULT NULL "
+            . ", circunscripcion varchar(50) DEFAULT NULL "
+            . ", propietario_suplente varchar(50) DEFAULT NULL "
+            . ", periodo varchar(50) DEFAULT NULL "
             . ", anio_ini int(11) DEFAULT NULL "
             . ", anio_fin int(11) DEFAULT NULL "
             . ", poder varchar(100) DEFAULT NULL "
             . ", nivel_gobierno varchar(100) DEFAULT NULL "
             . ", cargo varchar(100) DEFAULT NULL "
-            . ", descripcion_pp varchar(300) DEFAULT NULL "
-            . ", entidad_federativa varchar(100) DEFAULT NULL "
+            . ", descripcion_pp varchar(400) DEFAULT NULL "
+            . ", entidad_federativa varchar(400) DEFAULT NULL "
             . ", PRIMARY KEY (id) "
             . ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; ";
         $wpdb->query($sql);
@@ -112,22 +112,33 @@ class import_csv {
                 $nombreTabla = $wpdb->prefix . "mcp_legislativo";
                 if ($wpdb->get_var("SHOW TABLES LIKE '$nombreTabla'") == $nombreTabla) {
                     while (($row = fgetcsv($handle, 100000, ",")) !== FALSE) {
+                        $row = array_map("utf8_encode", $row);
                         $wpdb->insert(
                             $nombreTabla, 
                             array(
-                                'sexo'                      => $row[2]
-                                ,'partido_politico'          => $row[3]
-                                ,'propietario_suplente'      => $row[7]
-                                ,'periodo'                   => $row[8]
-                                ,'anio_ini'                  => $row[9]
-                                ,'anio_fin'                  => $row[10]
-                                ,'poder'                     => $row[11]
-                                ,'nivel_gobierno'            => $row[12]
-                                ,'cargo'                     => $row[13]
-                                ,'descripcion_pp'            => $row[14]
-                                ,'entidad_federativa'        => $row[15]
+                                'apellido'                  => trim($row[0])
+                                ,'nombre'                    => trim($row[1])
+                                ,'sexo'                      => trim($row[2])
+                                ,'partido_politico'          => trim($row[3])
+                                ,'principio_representacion'  => trim($row[4])
+                                ,'distrito_electoral'        => trim($row[5])
+                                ,'circunscripcion'           => trim($row[6])
+                                ,'propietario_suplente'      => trim($row[7])
+                                ,'periodo'                   => trim($row[8])
+                                ,'anio_ini'                  => trim($row[9])
+                                ,'anio_fin'                  => trim($row[10])
+                                ,'poder'                     => trim($row[11])
+                                ,'nivel_gobierno'            => trim($row[12])
+                                ,'cargo'                     => trim($row[13])
+                                ,'descripcion_pp'            => trim($row[14])
+                                ,'entidad_federativa'        => trim($row[15])
                             ), 
-                            array( 
+                            array(
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
                                 '%s',
                                 '%s',
                                 '%s',
@@ -156,7 +167,7 @@ class import_csv {
     }
     function main_body() 
     {
-        $string = 'Agregar solo archivo CSV';
+        $string = 'Datos Genero';
         $this->verificaCsv();
         ?>
         <div class="wrap">
@@ -168,10 +179,11 @@ class import_csv {
                 <div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
                     <h3 class="hndle" style="cursor:auto;padding:10px;">
                         <span>
-                            Plantilla a Importar/Exportar
+                            <a href="<?php echo esc_url(plugins_url().'/data-chart/public/assets/files/wp_ine_mcp_legislativo.csv')?>">Plantilla CSV</a>
+                            
                         </span>
                     </h3>
-                    <div class="inside">
+                    <!--div class="inside">
                         <select name="field-delimiter">
                             <option value="">-- Selecciona</option>
                             <option value="mcpe">#MujeresEnCargosPúblicos EJECUTIVO</option>
@@ -180,7 +192,7 @@ class import_csv {
                     </div>
                     <div class="inside">
                         <input type="button" class="button" name="button-download" value="Descargar" />
-                    </div>
+                    </div-->
                 </div>
                 <div id="formatdiv" class="postbox" style="display: block;max-width:350px;">
                     <h3 class="hndle" style="cursor:auto;padding:10px;">
@@ -244,42 +256,3 @@ function dwwp_admin_enqueue_scripts()
     }
 }
 add_action('admin_enqueue_scripts', 'dwwp_admin_enqueue_scripts');
-
-
-
-//                            array(
-//                                'apellido'                  => $row[0]
-//                                ,'nombre'                    => $row[1]
-//                                ,'sexo'                      => $row[2]
-//                                ,'partido_politico'          => $row[3]
-//                                ,'principio_representacion'  => $row[4]
-//                                ,'distrito_electoral'        => $row[5]
-//                                ,'circunscripcion'           => $row[6]
-//                                ,'propietario_suplente'      => $row[7]
-//                                ,'periodo'                   => $row[8]
-//                                ,'anio_ini'                  => $row[9]
-//                                ,'anio_fin'                  => $row[10]
-//                                ,'poder'                     => $row[11]
-//                                ,'nivel_gobierno'            => $row[12]
-//                                ,'cargo'                     => $row[13]
-//                                ,'descripcion_pp'            => $row[14]
-//                                ,'entidad_federativa'        => $row[15]
-//                            ), 
-//                            array( 
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%d',
-//                                '%d',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s',
-//                                '%s'
-//                            )
