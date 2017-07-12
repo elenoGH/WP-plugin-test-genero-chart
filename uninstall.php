@@ -1,8 +1,16 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+// if uninstall.php is not called by WordPress, die
+if (!defined('WP_UNINSTALL_PLUGIN')) {
+    die;
+}
+ 
+$option_name = 'wporg_option';
+ 
+delete_option($option_name);
+ 
+// for site options in Multisite
+delete_site_option($option_name);
+ 
+// drop a custom database table
+global $wpdb;
+$wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}mcp_legislativo");
