@@ -2,7 +2,7 @@
 /*
  * Plugin Name: Graphic Manager Charts
  * Plugin URI:https://developer.wordpress.org/plugins/the-basics/
- * Description: Manegador de graficas (Big Data Genero)
+ * Description: Manegador de graficas (Big Data Genero) [sc-mcp-legislativo]
  * Version:1.0
  * Author:Martin Eleno Perez
  * Author URI:https://developer.wordpress.org/
